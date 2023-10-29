@@ -1,4 +1,4 @@
-from flask import render_template,redirect,url_for,session
+from flask import render_template
 from dbservices import *
 
 app.secret_key = "Mackaysltd"
