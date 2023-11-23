@@ -5,7 +5,7 @@ from flask_login import UserMixin , LoginManager
  
 
 app = Flask(__name__)
-login_manager = LoginManager(app)
+# login_manager = LoginManager(app)
 app.config["SQLALCHEMY_DATABASE_URI"]= "postgresql://postgres:kenkivuti254@localhost:5432/mackaysdb"
 db = SQLAlchemy(app)
 
@@ -17,7 +17,9 @@ class Users( UserMixin , db.Model):
     contact = db.Column(db.String)
     email=db.Column(db.String(255),nullable = False)
     password=db.Column(db.String(255),nullable=False)
+    role=db.Column(db.String(255), nullable=False , default="tenant")
     dashboard_content = db.Column(db.String(255), default="Default Dashboard Content")
+
 
 
 class Tenants(db.Model):

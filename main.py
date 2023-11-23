@@ -1,12 +1,14 @@
-from flask import render_template, request , flash , redirect , url_for 
+from flask import render_template, request , flash , redirect , url_for , session
 from dbservices import *
-from flask_login import LoginManager,  login_user, current_user ,login_manager,login_required
+from flask_login import LoginManager,  login_user, current_user ,login_manager, login_required
+
 login_manager = LoginManager(app)
+login_manager.login_view='login'
 
 with app.app_context():
     db.create_all()
 
-app.secret_key = "Mackaysltd"
+app.secret_key = "Ma@ck#ays%ltd"
 
 
 @app.route("/")
@@ -29,6 +31,7 @@ def register():
        contact=request.form["contact"]
        email=request.form["email"]
        password=request.form['password']
+       role=request.form['role']
 
      #    check if email exist
        user=Users.query.filter_by(email=email).first()
@@ -36,7 +39,7 @@ def register():
        if user:
          flash("email already exist")
        else:
-        new_user=Users(name=name ,contact=contact, email=email , password=password)
+        new_user=Users(name=name ,contact=contact, email=email , password=password  , role=role)
         db.session.add(new_user)
         db.session.commit()
         flash("Registered successfully")
@@ -58,7 +61,8 @@ def login():
 
         user = Users.query.filter_by(email=email, password=password).first()
 
-        if user:
+        if user: 
+            login_user(user)
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
         else:
@@ -66,15 +70,27 @@ def login():
 
     return render_template('login.html')
 
+
+# @app.route('/admin_page')
+# @login_required
+# def admin_page():
+#     if current_user.role != 'admin':
+#         flash('Access denied. You do not have permission to view this page.', 'error')
+#         return redirect(url_for('login'))
+#     return render_template('index.html')
+
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
+    print(current_user)
     flash(f'Welcome to the dashboard, {current_user.email}! Content: {current_user.dashboard_content}', 'info')
     return render_template('dashboard.html')
+    
 
 
 @app.route("/tenants" , methods=['POST' , 'GET'])
-def tenant():
+def tenants():
    if request.method == 'POST' :
       full_name=request.form['full_name']
       email=request.form['email']
@@ -95,13 +111,14 @@ def tenant():
    records = Tenants.query.all()
    tenants = [tnt for tnt in records]
    return render_template("tenants.html", tenants=tenants)
+
+
+@app.route("/logout")
+def logout():
+   session.pop('email' , None)
+   flash('logout successfully')
+   return render_template(url_for('login'))
   
-
-  
-   
-   
-
-
 
 if __name__== "__main__":
  app.run(debug=True)  

@@ -4,5 +4,10 @@
 
 {% block content %}
 
-<h1>dashboard page</h1>
+<body>
+    <h1>Welcome to the Dashboard, {{ current_user.email }}!</h1>
+
+    <p>Content: {{ current_user.dashboard_content }}</p>
+    
+</body>
 {% endblock %}
