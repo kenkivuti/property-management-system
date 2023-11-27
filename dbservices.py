@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime
 from flask_login import UserMixin , LoginManager
+from enum import Enum
  
 
 app = Flask(__name__)
@@ -9,6 +10,10 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"]= "postgresql://postgres:kenkivuti254@localhost:5432/mackaysdb"
 db = SQLAlchemy(app)
 
+
+class UserRole(Enum):
+    USER = 'user'
+    ADMIN = 'admin'
 
 class Users( UserMixin , db.Model):
     __tablename__ = 'users'

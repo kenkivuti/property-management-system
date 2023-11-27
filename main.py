@@ -58,10 +58,13 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        
 
         user = Users.query.filter_by(email=email, password=password).first()
 
         if user: 
+            # store email in session
+            session['email']= user.email
             login_user(user)
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
@@ -84,7 +87,7 @@ def login():
 @login_required
 def dashboard():
     print(current_user)
-    flash(f'Welcome to the dashboard, {current_user.email}! Content: {current_user.dashboard_content}', 'info')
+    flash(f'Welcome to your dashboard, {current_user.email}! Content: {current_user.dashboard_content}', 'info')
     return render_template('dashboard.html')
     
 
@@ -106,8 +109,12 @@ def tenants():
     #   commit changes to the database
       db.session.commit()
       flash("tenant added succesfully")
+
+#    limit other users from accessing the page
+#    if  Users.role != 'admin':
+#         flash("Access denied  you do not have permission to view this page")
+#         return redirect(url_for('login'))    
       
-   
    records = Tenants.query.all()
    tenants = [tnt for tnt in records]
    return render_template("tenants.html", tenants=tenants)
@@ -117,7 +124,7 @@ def tenants():
 def logout():
    session.pop('email' , None)
    flash('logout successfully')
-   return render_template(url_for('login'))
+   return render_template('login.html')
   
 
 if __name__== "__main__":
