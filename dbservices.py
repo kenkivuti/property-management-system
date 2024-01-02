@@ -3,7 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime
 from flask_login import UserMixin , LoginManager
 from enum import Enum
- 
+from wtforms import SelectField
+from flask_wtf import FlaskForm
+
 
 app = Flask(__name__)
 # login_manager = LoginManager(app)
@@ -14,6 +16,13 @@ db = SQLAlchemy(app)
 class UserRole(Enum):
     USER = 'user'
     ADMIN = 'admin'
+
+
+
+class Form(FlaskForm):
+    house=SelectField('house_id',choices=[])
+    tenant=SelectField('tenant_id',choices=[])
+    
 
 class Users( UserMixin , db.Model):
     __tablename__ = 'users'
@@ -48,7 +57,7 @@ class Houses(db.Model):
 class TenantHouses(db.Model):
     __tablename__ = 'tenant_houses'
     id = db.Column(db.Integer , primary_key = True)
-    tenant_id = db.Column(db.Integer , db.ForeignKey('tenants.id'), nullable =False)
+    tenant_id = db.Column(db.Integer , db.ForeignKey('tenants.id'))
     house_id = db.Column(db.Integer , db.ForeignKey('houses.id'))
     start_date = db.Column(DateTime )
     end_date = db.Column(db.String)

@@ -1,0 +1,79 @@
+{% extends "base.html"%} {% block title %} tenantshouses {% endblock %} {% block
+    content %}
+    <h1>tenants page</h1>
+    <table class="table table-striped" style="width: 100%" id="my_table">
+      <thead>
+        <tr>
+          <th scope="col"> Tenant Id</th>
+          <th scope="col">House Id</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">End Date</th>
+          
+        </tr>
+      </thead>
+      <tbody id="tenantshouse_table">
+        {% for tnthouse in tenant_house %}
+        <tr>
+          <td>{{ tnthouse.tenant_id }}</td>
+          <td>{{ tnthouse.house_id }}</td>
+          <td>{{ tnthouse.start_date }}</td>
+          <td>{{ tnthouse.end_date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <!-- add tenant from -->
+    <div class="container mt-4">
+      <h1>Add tenanthouse</h1>
+      <form id="products_form" method="post" action="/tenantshouses">
+
+        <!-- tenant id -->
+        <div class="form-group">
+          <label for="tenant"> Tenant Id:</label>
+           <select id="tenant_id" name="tenant_id">
+            {% for tenantid in tenant_house %}
+            <option value="{{ tenantid }}">{{ tenant_id }}</option>
+            {% endfor %}
+           </select>
+        </div>
+
+        <br>
+
+        <!-- house id -->
+        <div class="mb-3">
+          <label for="email" class="form-label">House Id</label>
+         <select id="house_id" name="house_id">
+          {% for houseid in tenant_house %}
+          <option value="{{ house_id }}">{{ house_id }}</option>
+          {% endfor %}
+         </select> 
+        </div>
+    
+        <!-- start date -->
+        <div class="mb-3">
+          <label for="phone" class="form-label">start Date</label>
+          <input
+            type="date"
+            class="form-control"
+            id="date"
+            name="start_date"
+            required
+          />
+        </div>
+       <!-- end date -->
+        <div class="mb-3">
+            <label for="phone" class="form-label">End Date</label>
+            <input
+              type="text"
+              class="form-control"
+              id="date"
+              name="end_date"
+              required
+            />
+          </div>
+    
+        <button type="submit" class="btn btn-primary">Add tenant house</button>
+      </form>
+    </div>
+    
+    {% endblock %}
